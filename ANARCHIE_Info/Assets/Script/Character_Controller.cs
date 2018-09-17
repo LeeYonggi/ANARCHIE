@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Character_Controller : MonoBehaviour
 {
+    public float speed;
+    public float jumpSpeed;
 
-    public float speed = 5.0f;
     private float m_ScaleX;
     private Animator m_Animator;
+    private Rigidbody2D m_Rigidbody2D;
+    bool isJump;
 
 
     // Use this for initialization
@@ -15,6 +18,8 @@ public class Character_Controller : MonoBehaviour
     {
         m_ScaleX = transform.localScale.x;
         m_Animator = GetComponent<Animator>();
+        m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        isJump = false;
     }
 
     // Update is called once per frame
@@ -34,6 +39,12 @@ public class Character_Controller : MonoBehaviour
         else
             ChangeAnime(0);
 
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+        if (isJump == true && m_Rigidbody2D.velocity.y < 0)
+        {
+            ChangeAnime(0);
+        }
     }
 
     bool FlipObject(float key)
@@ -54,5 +65,22 @@ public class Character_Controller : MonoBehaviour
     void ChangeAnime(int state)
     {
         m_Animator.SetInteger("Anime_State", state);
+    }
+
+    void Jump()
+    {
+        if (isJump == false)
+        {
+            m_Rigidbody2D.AddForce(new Vector2(0, jumpSpeed));
+            isJump = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            isJump = false;
+        }
     }
 }
