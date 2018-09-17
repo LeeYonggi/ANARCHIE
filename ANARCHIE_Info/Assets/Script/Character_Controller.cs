@@ -26,6 +26,14 @@ public class Character_Controller : MonoBehaviour
     void Update()
     {
         MoveObject();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+
+        if (isJump == true && m_Rigidbody2D.velocity.y < 0)
+        {
+            ChangeAnime(3);
+        }
     }
 
     void MoveObject()
@@ -34,17 +42,11 @@ public class Character_Controller : MonoBehaviour
         float key = Input.GetAxis("Horizontal");
 
         transform.Translate(Vector3.right * amtMove * key, Space.World);
-        if (FlipObject(key))
-            ChangeAnime(1);
-        else
-            ChangeAnime(0);
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            Jump();
-        if (isJump == true && m_Rigidbody2D.velocity.y < 0)
-        {
+        if (FlipObject(key) && isJump == false)
+            ChangeAnime(1);
+        else if(isJump == false)
             ChangeAnime(0);
-        }
     }
 
     bool FlipObject(float key)
@@ -73,6 +75,8 @@ public class Character_Controller : MonoBehaviour
         {
             m_Rigidbody2D.AddForce(new Vector2(0, jumpSpeed));
             isJump = true;
+            ChangeAnime(0);
+            ChangeAnime(2);
         }
     }
 
@@ -81,6 +85,7 @@ public class Character_Controller : MonoBehaviour
         if(collision.gameObject.tag == "Ground")
         {
             isJump = false;
+            ChangeAnime(0);
         }
     }
 }
