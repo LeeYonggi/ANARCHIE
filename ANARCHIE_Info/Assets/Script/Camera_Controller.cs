@@ -6,10 +6,10 @@ public class Camera_Controller : MonoBehaviour {
 
     public float smoothness;
 
-    private GameObject player;
+    public GameObject player;
 
 	void Start () {
-        player = GameObject.Find("Player");
+
     }
 	
 	void LateUpdate () {
